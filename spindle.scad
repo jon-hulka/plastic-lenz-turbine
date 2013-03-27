@@ -43,9 +43,9 @@ module spindle(shaft_diameter,turbine_diameter,thickness=4,with_shaft_hole=true)
 	{
 		if(with_shaft_hole) difference()
 		{
-			spindle_sub(shaft_diameter,turbine_diameter,thickness=4);
+			spindle_sub(shaft_diameter,turbine_diameter,thickness);
 			cylinder(h=40+thickness*17,r=shaft_diameter/2,center=true);
 		}
-		else spindle_sub(shaft_diameter,turbine_diameter,thickness=4);
+		else spindle_sub(shaft_diameter,turbine_diameter,thickness);
 	}
 }
