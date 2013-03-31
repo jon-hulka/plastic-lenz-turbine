@@ -19,7 +19,8 @@
 
 include <arm.scad>;
 include <spindle.scad>;
-draw_model(mode="exploded",shaft_diameter=15,sheet_thickness=2,turbine_diameter=450);
+//modes: "arm", "arm mirror", "spindle", "assembled", "exploded"
+draw_model(mode="exploded",shaft_diameter=15,sheet_thickness=2,turbine_diameter=650);
 
 module draw_model(mode="assembled",shaft_diameter,sheet_thickness,turbine_diameter,thickness=4,margin=10)
 {

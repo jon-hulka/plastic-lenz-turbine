@@ -19,7 +19,6 @@
 include <wing.scad>;
 include <spindle.scad>;
 include <screws.scad>;
-include <wedge.scad>;
 module arm(shaft_diameter,sheet_thickness,turbine_diameter,thickness=4,margin=10)
 {
 	difference()
@@ -28,29 +27,38 @@ module arm(shaft_diameter,sheet_thickness,turbine_diameter,thickness=4,margin=10
 		{
 			translate([0,0,thickness/2]) difference()
 			{
-				intersection()
+				rotate(a=-13)intersection()
 				{
-					union()
-					{
-						//Flat bottom part
-						translate([0,turbine_diameter/8,0])mirror([0,1,0])wedge(h=thickness,r=turbine_diameter,a=20);
-						//Reinforcing rib - fades into the arm near the end
-						rotate([90+asin(thickness*3/(turbine_diameter*(0.8)/2-margin*3)),0,0])translate([0,thickness,turbine_diameter/2-thickness/2])
-						{
-							cube(size=[thickness*4,thickness*2,turbine_diameter],center=true);
-							translate([0,thickness,0])cylinder(h=turbine_diameter,r=thickness*2,center=true);
-						}
-					}
-					//Flatten the bottom and trim off anything that might overlap other arms
-					translate([0,-1,thickness*2])mirror([0,1,0])wedge(h=thickness*5,r=turbine_diameter,a=120);
+					rotate_extrude() polygon(
+						points=[
+							[0,-thickness/2],[0,thickness*7/2],
+							[turbine_diameter*1/8,thickness*7/2],
+							[turbine_diameter*3/8,thickness/2],
+							[turbine_diameter/2,thickness/2],
+							[turbine_diameter/2,-thickness/2]]);
+					linear_extrude(height=thickness*11,center=true) polygon(
+						points=[[thickness*4,-5],
+							[-thickness*4,-5],
+							[0,-turbine_diameter],
+							[turbine_diameter/2,-turbine_diameter]]);
 				}
-				//extend 1/2 margin into wing piece
-				rotate(a=-14)
-				translate([0,-turbine_diameter*(1-0.14/2)+margin/2,0])
+				union()
+				{
+					translate([turbine_diameter/2+thickness*2,0,turbine_diameter/2+thickness/2])
+						cube(
+							size=[turbine_diameter,turbine_diameter,turbine_diameter],
+							center=true);
+					translate([-turbine_diameter/2-thickness*2,0,turbine_diameter/2+thickness/2])
+						cube(
+							size=[turbine_diameter,turbine_diameter,turbine_diameter],
+							center=true);
+				}
+				rotate(a=-9)
+				translate([0,-turbine_diameter+turbine_diameter*0.14/2+margin/2,0])
 					rotate(a=9)
 						cube(size=turbine_diameter,center=true);
 			}
-			rotate(a=-14) //Move the wing into place
+			rotate(a=-9) //Move the wing into place
 				translate([0,-turbine_diameter/2,0])
 					rotate(a=9)
 						wing(sheet_thickness,turbine_diameter,thickness,margin);
